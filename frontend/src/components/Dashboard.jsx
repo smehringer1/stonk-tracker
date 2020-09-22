@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Grid, Paper } from '@material-ui/core'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import Navbar from './Navbar'
@@ -15,13 +15,12 @@ export default function Dashboard({update}) {
 
     return (
         <>
-            <Navbar>
-            <Button onClick={(e)=> {
-                e.preventDefault()
-                handleLogout()
-            }}>Logout</Button>
-            </Navbar>
-            
+            <Navbar handleLogout={handleLogout}/>
+            <Grid container style={{justifyContent : 'center'}}>
+                <Grid item xs={6}>
+                    <Paper style={{height:200, margin : 20}}>Hello</Paper>
+                </Grid>
+            </Grid>
         </>
     )
 }

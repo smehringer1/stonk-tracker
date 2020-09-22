@@ -3,7 +3,6 @@ var cors = require('cors')
 const session = require('express-session')
 const passport = require('passport')
 const app = express();
-const { ensureAuthenticate, checkNotAuthenticate } = require('./config/authMethods')
 const userRoutes = require('./routes/user')
 const {dbConnect} = require('./config/db')
 
@@ -20,16 +19,8 @@ app.use(
   );
 app.use(passport.initialize())
 app.use(passport.session())
-// app.use((req, res, next) => {
-//   console.log('req.session', req.session)
-//   return next()
-// })
 
 app.use('/api/users', userRoutes)
-
-app.get('/', (req, res) => {
-  res.send("Hello")
-})
 
 
 

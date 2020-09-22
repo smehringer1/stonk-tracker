@@ -38,7 +38,6 @@ router.post("/register", checkNotAuthenticate, (req, res) => {
 
 router.get("/user", ensureAuthenticate , (req, res) => {
     const user = req.user;
-    console.log(user)
     res.send({...user, valid : true}); 
 });
 
