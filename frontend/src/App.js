@@ -5,37 +5,36 @@ import Dashboard from './components/Dashboard'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import './App.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, removeUser } from './redux/actions'
 
 function App() {
-  
-  const [ user, setUser ] = useState({})
-  const [check, setCheck] = useState(false)
-  const [ isAuthenticated, setIsAuthenticated] = useState(false)
+  const dispatch = useDispatch()
+  const isAuthenticated = useSelector(state => state.isAuthenticated)
   const history = useHistory()
 
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get('/api/users/user')
-      console.log(res.data)
+      console.log('useEffect run')
       try {
         if (res.data.valid){
-          setIsAuthenticated(true)
-          setUser({email : res.data.email})
+          dispatch(setUser(res.data))
         } else {
-          setIsAuthenticated(false)
+          dispatch(removeUser())
         }
       } catch {}
     }
     fetchData()
-  },[check])
+  },[])
 
   return (
       <Switch>
         <Route path="/dashboard">
-          {isAuthenticated ? <Dashboard update={()=> setCheck(!check)}/> : history.push('/login') }
+          {isAuthenticated ? <Dashboard/> : history.push('/login') }
         </Route>
         <Route path="/login">
-          {isAuthenticated ? history.push('/dashboard') : <LoginRegisterPage update={()=> setCheck(!check)}/>}
+          {isAuthenticated ? history.push('/dashboard') : <LoginRegisterPage/>}
         </Route>
       </Switch>
   );

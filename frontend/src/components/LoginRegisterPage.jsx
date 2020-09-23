@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../redux/actions'
 import { Grid, Paper, TextField, Button } from '@material-ui/core'
 import { loginUser, registerUser } from '../auth/authActions'
 
-export default function LoginRegisterPage({update}) {
-
+export default function LoginRegisterPage() {
+    const dispatch = useDispatch()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loginPage, setLoginPage] = useState(true)
@@ -12,22 +14,21 @@ export default function LoginRegisterPage({update}) {
     const history = useHistory()
 
     const handleSubmit = async (email, password, login) => {
-        var response = {}
+        var res = {}
         if (login) {
-            response = await loginUser(email, password)
+            res = await loginUser(email, password)
         } else {
-            response = await registerUser(email, password)
+            res = await registerUser(email, password)
         }
-
-        if (response.valid === true){
-          console.log('Success')
-          history.push('/dashboard')
+        if (res.valid === true){
+            console.log('Success')
+            dispatch(setUser(res.data))
+            history.push('/dashboard')
         } else {
-          console.log('Fail')
-          console.log(response.msg)
-          setFail(true)
+            console.log('Fail')
+            console.log(res.msg)
+            setFail(true)
         }
-        update()
     }
 
     return (
@@ -43,10 +44,10 @@ export default function LoginRegisterPage({update}) {
                         e.preventDefault()
                         handleSubmit(email,password, loginPage)}}>
                     <Grid item>
-                        <TextField id="standard-basic" label="email" onChange={(e) => setEmail(e.target.value)}/>
+                        <TextField id="email" label="email" onChange={(e) => setEmail(e.target.value)}/>
                     </Grid>
                     <Grid item>
-                        <TextField id="standard-basic" type="password" label="password" onChange={(e) => setPassword(e.target.value)}/>
+                        <TextField id="password" type="password" label="password" onChange={(e) => setPassword(e.target.value)}/>
                     </Grid>
                     <Grid item>
                         <Button type="submit" variant="contained" color="primary"  style={{marginTop : 30}}>Submit</Button>
